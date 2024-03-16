@@ -1,0 +1,18 @@
+{
+  "name": "@packages/build-config",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@types/webpack": "^5.28.5",
+    "@types/webpack-dev-server": "^4.7.2",
+    "fork-ts-checker-webpack-plugin": "^9.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
+  }
+}

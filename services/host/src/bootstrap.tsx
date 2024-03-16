@@ -1,5 +1,5 @@
 import {render} from 'react-dom'
-import { App } from "./app";
+import { EntryPoint } from "./entryPoint";
 
 
-render(<App/>, document.getElementById('host'))
+render(<EntryPoint/>, document.getElementById('host'))

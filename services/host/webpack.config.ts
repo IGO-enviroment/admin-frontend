@@ -1,5 +1,5 @@
-import { BuildMode, buildWebpack} from "@packages/build-config";
 import path from "path";
+import { BuildMode, buildWebpack} from "@packages/build-config";
 import packageJson from './package.json'
 
 export interface BuildEnv {

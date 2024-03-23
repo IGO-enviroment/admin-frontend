@@ -4,5 +4,12 @@
   "workspaces": [
     "packages/*",
     "services/*"
-  ]
+  ],
+  "dependencies": {
+    "@mui/icons-material": "^5.15.14",
+    "draft-js": "^0.11.7"
+  },
+  "devDependencies": {
+    "@types/draft-js": "^0.11.18"
+  }
 }

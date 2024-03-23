@@ -25,7 +25,9 @@
     "react-redux": "^9.1.0",
     "react-router": "^6.22.3",
     "react-router-dom": "^6.22.3",
-    "draft-js": "^0.11.7"
+    "draft-js": "^0.11.7",
+    "@mui/icons-material": "^5.15.14",
+    "immutable": "^3.7.6"
   },
   "devDependencies": {
     "@conarti/eslint-plugin-feature-sliced": "^1.0.5",
@@ -45,6 +47,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "webpack": "^5.90.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4","@types/draft-js": "^0.11.18"
   }
 }

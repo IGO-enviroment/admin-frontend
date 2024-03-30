@@ -4,6 +4,7 @@ export interface BuildPaths{
     entry: string;
     html: string;
     output: string;
+    src: string
 }
 
 export type BuildMode = Configuration['mode']
@@ -18,5 +19,6 @@ export interface BuildOptions{
     moduleFederationOptions?: {
         remotes?: Record<string, string>,
         exposes?: Record<string, string>,
-    }
+    },
+    resolve?: any
 }

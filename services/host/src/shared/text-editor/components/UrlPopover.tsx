@@ -1,18 +1,18 @@
-import React, { FunctionComponent, useState } from "react";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Popover from "@mui/material/Popover";
-import TextField from "@mui/material/TextField";
-import { Theme } from "@mui/material/styles";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
-import MovieIcon from "@mui/icons-material/Movie";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
 import FormatAlignCenter from "@mui/icons-material/FormatAlignCenter";
 import FormatAlignLeft from "@mui/icons-material/FormatAlignLeft";
 import FormatAlignRight from "@mui/icons-material/FormatAlignRight";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import MovieIcon from "@mui/icons-material/Movie";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Grid from "@mui/material/Grid";
+import Popover from "@mui/material/Popover";
+import { Theme } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import React, { FunctionComponent, useState } from "react";
 
 export type TAlignment = "left" | "center" | "right";
 
@@ -33,7 +33,7 @@ interface IUrlPopoverStateProps {
    onConfirm: (isMedia?: boolean, ...args: any) => void;
 }
 
-const UrlPopover: FunctionComponent<IUrlPopoverStateProps> = (props) => {
+export const UrlPopover: FunctionComponent<IUrlPopoverStateProps> = (props) => {
    const [data, setData] = useState<TUrlData>(
       props.data || {
          url: undefined,

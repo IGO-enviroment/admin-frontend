@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from "react";
-import { Theme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import { Theme } from "@mui/material/styles";
+import React, { FunctionComponent } from "react";
 
 interface IBlockquoteProps {
    children?: React.ReactNode;
 }
 
-const CodeBlock: FunctionComponent<IBlockquoteProps> = ({ children }) => {
+export const CodeBlock: FunctionComponent<IBlockquoteProps> = ({ children }) => {
    return (
       <Box
          sx={{

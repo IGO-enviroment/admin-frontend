@@ -15,23 +15,26 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.13",
+    "@mui/styles": "^5.15.14",
     "@packages/build-config": "*",
     "@reduxjs/toolkit": "^2.2.1",
+    "classnames": "^2.5.1",
+    "draft-js": "^0.11.7",
+    "immutable": "^3.7.6",
     "msw": "^2.2.4",
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",
     "react-router": "^6.22.3",
-    "react-router-dom": "^6.22.3",
-    "draft-js": "^0.11.7",
-    "@mui/icons-material": "^5.15.14",
-    "immutable": "^3.7.6"
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@conarti/eslint-plugin-feature-sliced": "^1.0.5",
     "@feature-sliced/eslint-config": "^0.1.0-beta.6",
+    "@types/draft-js": "^0.11.18",
     "@types/node": "^20.11.28",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
@@ -47,6 +50,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "webpack": "^5.90.1",
-    "webpack-cli": "^5.1.4","@types/draft-js": "^0.11.18"
+    "webpack-cli": "^5.1.4"
   }
 }

@@ -1,23 +1,23 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
-import { EditorState } from "draft-js";
+import CodeIcon from "@mui/icons-material/Code";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
+import FormatClearIcon from "@mui/icons-material/FormatClear";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
-import StrikethroughIcon from "@mui/icons-material/StrikethroughS";
 import HighlightIcon from "@mui/icons-material/Highlight";
-import TitleIcon from "@mui/icons-material/Title";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import CodeIcon from "@mui/icons-material/Code";
-import FormatClearIcon from "@mui/icons-material/FormatClear";
-import SaveIcon from "@mui/icons-material/Save";
-import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
-import ToolbarButton from "./ToolbarButton";
+import SaveIcon from "@mui/icons-material/Save";
+import StrikethroughIcon from "@mui/icons-material/StrikethroughS";
+import TitleIcon from "@mui/icons-material/Title";
+import UndoIcon from "@mui/icons-material/Undo";
+import { EditorState } from "draft-js";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { getSelectionInfo } from "../utils";
+import { ToolbarButton } from "./ToolbarButton";
 
 export type TToolbarControl =
    | "title"
@@ -201,7 +201,7 @@ const STYLE_TYPES: TStyleType[] = [
    },
 ];
 
-const Toolbar: FunctionComponent<TToolbarProps> = (props) => {
+export const Toolbar: FunctionComponent<TToolbarProps> = (props) => {
    const [availableControls, setAvailableControls] = useState(props.controls ? [] : STYLE_TYPES);
    const { editorState } = props;
    const id = props.inlineMode ? "-inline-toolbar" : "-toolbar";
@@ -280,4 +280,3 @@ const Toolbar: FunctionComponent<TToolbarProps> = (props) => {
       </div>
    );
 };
-export default Toolbar;

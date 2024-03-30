@@ -73,7 +73,7 @@ export const findDecoWithRegex = (regex: RegExp, contentBlock: any, callback: an
    }
 };
 
-export const MUIRichTextEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEditorProps> = (props, ref) => {
+const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEditorProps> = (props, ref) => {
    const { classes, controls, customControls } = props;
 
    const [state, setState] = useState<TMUIRichTextEditorState>({});
@@ -983,4 +983,4 @@ export const MUIRichTextEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, 
    );
 };
 
-export default withStyles(styles, { withTheme: true, name: "MUIRichTextEditor" })(forwardRef(MUIRichTextEditor));
+export default withStyles(styles, { withTheme: true, name: "MUIEditor" })(forwardRef(MUIEditor));

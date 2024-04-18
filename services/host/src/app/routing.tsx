@@ -1,15 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-// eslint-disable-next-line import/no-internal-modules
-import MUIEditor from "@/shared/text-editor/editor/editor";
+import { TextEditor } from "@/features/editors/text-editor";
 
 export const Routing = () => {
-   const handleSave = (data: string) => {
-      console.log(data);
-      console.log(JSON.parse(data));
-   };
    return (
       <Routes>
-         <Route path="/" element={<MUIEditor onSave={handleSave} />}></Route>
+         <Route path="/" element={<h1>Рутовая страница</h1>}></Route>
+         <Route path="/text" element={<TextEditor />}></Route>
       </Routes>
    );
 };

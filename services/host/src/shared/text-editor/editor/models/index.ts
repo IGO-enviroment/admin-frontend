@@ -15,10 +15,6 @@ export type TAsyncAtomicBlockResponse = {
 export type TMUIRichTextEditorRef = {
    focus: () => void;
    save: () => void;
-   /**
-    * @deprecated Use `insertAtomicBlockSync` instead.
-    */
-   insertAtomicBlock: (name: string, data: any) => void;
    insertAtomicBlockSync: (name: string, data: any) => void;
    insertAtomicBlockAsync: (name: string, promise: Promise<TAsyncAtomicBlockResponse>, placeholder?: string) => void;
 };

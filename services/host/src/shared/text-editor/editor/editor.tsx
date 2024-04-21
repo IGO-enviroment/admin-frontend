@@ -53,8 +53,6 @@ type TStateOffset = {
 };
 
 const { hasCommandModifier } = KeyBindingUtil;
-const autocompleteMinSearchCharCount = 2;
-const lineHeight = 26;
 const defaultInlineToolbarControls = ["bold", "italic", "underline", "clear"];
 
 export const findLinkEntities = (contentBlock: any, callback: any, contentState: any) => {
@@ -79,7 +77,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    const [state, setState] = useState<TMUIRichTextEditorState>({});
    const [focus, setFocus] = useState(false);
    const [searchTerm, setSearchTerm] = useState("");
-   const [selectedIndex, setSelectedIndex] = useState<number>(0);
    const [editorState, setEditorState] = useState(() => createEditorState(props));
    const [focusMediaKey, setFocusMediaKey] = useState("");
 
@@ -97,7 +94,7 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    });
 
    /**
-    * Exposed methods
+    * Открытые методы
     */
    useImperativeHandle(ref, () => ({
       focus: () => {
@@ -105,9 +102,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       },
       save: () => {
          handleSave();
-      },
-      insertAtomicBlock: (name: string, data: any) => {
-         handleInsertAtomicBlockSync(name, data);
       },
       insertAtomicBlockSync: (name: string, data: any) => {
          handleInsertAtomicBlockSync(name, data);
@@ -418,6 +412,8 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    };
 
    const handleToolbarClick = (style: string, type: string, id: string, inlineMode?: boolean) => {
+      console.log(type);
+      console.log(style);
       if (type === "inline") {
          return toggleInlineStyle(style);
       }
@@ -516,7 +512,12 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    };
 
    const confirmMedia = (url?: string, width?: number, height?: number, alignment?: TAlignment, type?: TMediaType) => {
+      // TODO медиа попапчик где-то тут
       const { urlKey } = state;
+      console.group("PIZDA");
+      console.log(editorState);
+      console.log(urlKey);
+      console.log(url);
       if (!url) {
          if (urlKey) {
             removeMedia();
@@ -526,6 +527,9 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       }
 
       const contentState = editorState.getCurrentContent();
+      console.log(contentState);
+      console.log(contentState.getAllEntities());
+
       const data = {
          url: url,
          width: width,
@@ -533,16 +537,20 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
          alignment: alignment,
          type: type,
       };
+      console.log(data);
 
       if (urlKey) {
          contentState.replaceEntityData(urlKey, data);
+
          const newEditorState = EditorState.push(editorState, contentState, "apply-entity");
          updateStateForPopover(EditorState.forceSelection(newEditorState, newEditorState.getCurrentContent().getSelectionAfter()));
       } else {
          const newEditorState = insertAtomicBlock(editorState, "IMAGE", data);
+         console.log(newEditorState.getCurrentContent());
          updateStateForPopover(EditorState.forceSelection(newEditorState, newEditorState.getCurrentContent().getSelectionAfter()));
       }
       setFocusMediaKey("");
+      console.groupEnd();
    };
 
    const updateStateForPopover = (editorState: EditorState) => {

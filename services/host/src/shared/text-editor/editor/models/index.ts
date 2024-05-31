@@ -1,23 +1,11 @@
 import { CSSProperties, CreateCSSProperties, PropsFunc } from "@mui/styles";
 import { DraftHandleValue, EditorState, SelectionState } from "draft-js";
 import { FunctionComponent } from "react";
-import { TAutocompleteItem, TCustomControl, TToolbarButtonSize, TToolbarControl } from "../../components";
+import { TCustomControl, TToolbarButtonSize, TToolbarControl } from "../../components";
 
 export type TDecorator = {
    component: FunctionComponent;
    regex: RegExp;
-};
-
-export type TAutocompleteStrategy = {
-   triggerChar: string;
-   items: TAutocompleteItem[];
-   insertSpaceAfter?: boolean;
-   atomicBlockName?: string;
-};
-
-export type TAutocomplete = {
-   strategies: TAutocompleteStrategy[];
-   suggestLimit?: number;
 };
 
 export type TAsyncAtomicBlockResponse = {
@@ -27,10 +15,6 @@ export type TAsyncAtomicBlockResponse = {
 export type TMUIRichTextEditorRef = {
    focus: () => void;
    save: () => void;
-   /**
-    * @deprecated Use `insertAtomicBlockSync` instead.
-    */
-   insertAtomicBlock: (name: string, data: any) => void;
    insertAtomicBlockSync: (name: string, data: any) => void;
    insertAtomicBlockAsync: (name: string, promise: Promise<TAsyncAtomicBlockResponse>, placeholder?: string) => void;
 };
@@ -64,7 +48,6 @@ export type TMUIRichTextEditorProps = {
    draftEditorProps?: TDraftEditorProps;
    keyCommands?: TKeyCommand[];
    maxLength?: number;
-   autocomplete?: TAutocomplete;
    onSave?: (data: string) => void;
    onChange?: (state: EditorState) => void;
    onFocus?: () => void;

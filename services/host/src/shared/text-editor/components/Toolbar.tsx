@@ -202,7 +202,9 @@ const STYLE_TYPES: TStyleType[] = [
 ];
 
 export const Toolbar: FunctionComponent<TToolbarProps> = (props) => {
+   console.log(props);
    const [availableControls, setAvailableControls] = useState(props.controls ? [] : STYLE_TYPES);
+   console.log(availableControls);
    const { editorState } = props;
    const id = props.inlineMode ? "-inline-toolbar" : "-toolbar";
 
@@ -238,6 +240,7 @@ export const Toolbar: FunctionComponent<TToolbarProps> = (props) => {
    return (
       <div id={`${props.id}${id}`} className={props.className}>
          {availableControls.map((style) => {
+            console.log(style);
             if (props.inlineMode && style.type !== "inline" && style.name !== "link" && style.name !== "clear") {
                return null;
             }

@@ -3,37 +3,37 @@ import Paper from "@mui/material/Paper";
 import { withStyles } from "@mui/styles";
 import classNames from "classnames";
 import {
-   Editor,
-   EditorState,
-   RichUtils,
    AtomicBlockUtils,
+   ContentBlock,
    convertToRaw,
    DefaultDraftBlockRenderMap,
+   DraftBlockRenderMap,
    DraftEditorCommand,
    DraftHandleValue,
    DraftStyleMap,
-   ContentBlock,
-   SelectionState,
-   KeyBindingUtil,
+   Editor,
+   EditorState,
    getDefaultKeyBinding,
+   KeyBindingUtil,
    Modifier,
-   DraftBlockRenderMap,
+   RichUtils,
+   SelectionState,
 } from "draft-js";
 import Immutable from "immutable";
-import React, { useEffect, useState, useRef, useImperativeHandle, ForwardRefRenderFunction, forwardRef } from "react";
-import { Autocomplete, TAutocompleteItem, UrlPopover, TAlignment, TUrlData, TMediaType, Toolbar } from "../components";
+import React, { forwardRef, ForwardRefRenderFunction, useEffect, useImperativeHandle, useRef, useState } from "react";
+import Media from "@/shared/text-editor/components/Media";
+import { TAlignment, TMediaType, Toolbar, TUrlData, UrlPopover } from "../components";
 import { blockRenderMap, styleRenderMap } from "../constants";
 import {
-   getSelectionInfo,
-   removeBlockFromMap,
    atomicBlockExists,
-   isGreaterThan,
    clearInlineStyles,
    getEditorBounds,
-   getLineNumber,
+   getSelectionInfo,
+   isGreaterThan,
+   removeBlockFromMap,
    TPosition,
 } from "../utils";
-import { TAsyncAtomicBlockResponse, TAutocompleteStrategy, TMUIRichTextEditorProps, TMUIRichTextEditorRef } from "./models";
+import { TAsyncAtomicBlockResponse, TMUIRichTextEditorProps, TMUIRichTextEditorRef } from "./models";
 import { styles } from "./styles";
 import { createEditorState } from "./utils";
 
@@ -53,8 +53,6 @@ type TStateOffset = {
 };
 
 const { hasCommandModifier } = KeyBindingUtil;
-const autocompleteMinSearchCharCount = 2;
-const lineHeight = 26;
 const defaultInlineToolbarControls = ["bold", "italic", "underline", "clear"];
 
 export const findLinkEntities = (contentBlock: any, callback: any, contentState: any) => {
@@ -79,7 +77,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    const [state, setState] = useState<TMUIRichTextEditorState>({});
    const [focus, setFocus] = useState(false);
    const [searchTerm, setSearchTerm] = useState("");
-   const [selectedIndex, setSelectedIndex] = useState<number>(0);
    const [editorState, setEditorState] = useState(() => createEditorState(props));
    const [focusMediaKey, setFocusMediaKey] = useState("");
 
@@ -87,10 +84,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    const editorId = props.id || "mui-rte";
    const toolbarPositionRef = useRef<TPosition | undefined>(undefined);
    const editorStateRef = useRef<EditorState | null>(editorState);
-   const autocompleteRef = useRef<TAutocompleteStrategy | undefined>(undefined);
-   const autocompleteSelectionStateRef = useRef<SelectionState | undefined>(undefined);
-   const autocompletePositionRef = useRef<TPosition | undefined>(undefined);
-   const autocompleteLimit = props.autocomplete ? props.autocomplete.suggestLimit || 5 : 5;
    const isFirstFocus = useRef(true);
    const customBlockMapRef = useRef<DraftBlockRenderMap | undefined>(undefined);
    const customStyleMapRef = useRef<DraftStyleMap | undefined>(undefined);
@@ -101,7 +94,7 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    });
 
    /**
-    * Exposed methods
+    * Открытые методы
     */
    useImperativeHandle(ref, () => ({
       focus: () => {
@@ -109,9 +102,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       },
       save: () => {
          handleSave();
-      },
-      insertAtomicBlock: (name: string, data: any) => {
-         handleInsertAtomicBlockSync(name, data);
       },
       insertAtomicBlockSync: (name: string, data: any) => {
          handleInsertAtomicBlockSync(name, data);
@@ -141,16 +131,8 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       toolbarPositionRef.current = state.toolbarPosition;
    }, [state.toolbarPosition]);
 
-   useEffect(() => {
-      if (searchTerm.length < autocompleteMinSearchCharCount) {
-         setSelectedIndex(0);
-      }
-   }, [searchTerm]);
-
    const clearSearch = () => {
       setSearchTerm("");
-      autocompletePositionRef.current = undefined;
-      autocompleteSelectionStateRef.current = undefined;
    };
 
    const handleMouseUp = (event: any) => {
@@ -203,115 +185,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       }, 1);
    };
 
-   const findAutocompleteStrategy = (chars: string): TAutocompleteStrategy | undefined => {
-      if (!props.autocomplete) {
-         return undefined;
-      }
-      const acArray = props.autocomplete.strategies.filter((ac) => ac.triggerChar === chars);
-      if (acArray.length) {
-         return acArray[0];
-      }
-      return undefined;
-   };
-
-   const updateAutocompletePosition = () => {
-      const editor: HTMLElement = (editorRef.current as any)?.editor;
-      if (!editor) {
-         return;
-      }
-      const { editorRect, selectionRect } = getEditorBounds(editor);
-      const line = getLineNumber(editorState);
-      const top = selectionRect ? selectionRect.top : editorRect.top + lineHeight * line;
-      const left = selectionRect ? selectionRect.left : editorRect.left;
-      const position = {
-         top: editor.offsetTop + (top - editorRect.top) + lineHeight,
-         left: editor.offsetLeft + (left - editorRect.left),
-      };
-      if (!autocompleteSelectionStateRef.current) {
-         autocompleteSelectionStateRef.current = editorStateRef.current!.getSelection();
-      }
-      autocompletePositionRef.current = position;
-   };
-
-   const insertAutocompleteSuggestionAsAtomicBlock = (name: string, selection: SelectionState, value: any) => {
-      const block = atomicBlockExists(name, props.customControls);
-      if (!block) {
-         return;
-      }
-      const contentState = Modifier.removeRange(editorStateRef.current!.getCurrentContent(), selection, "forward");
-      const newEditorState = EditorState.push(editorStateRef.current!, contentState, "remove-range");
-      const withAtomicBlock = insertAtomicBlock(
-         newEditorState,
-         name.toUpperCase(),
-         {
-            value: value,
-         },
-         {
-            selection: newEditorState.getCurrentContent().getSelectionAfter(),
-         },
-      );
-      handleChange(withAtomicBlock);
-   };
-
-   const insertAutocompleteSuggestionAsText = (selection: SelectionState, value: string) => {
-      const currentContentState = editorState.getCurrentContent();
-      const entityKey = currentContentState.createEntity("AC_ITEM", "IMMUTABLE").getLastCreatedEntityKey();
-      const contentState = Modifier.replaceText(
-         editorStateRef.current!.getCurrentContent(),
-         selection,
-         value,
-         editorStateRef.current!.getCurrentInlineStyle(),
-         entityKey,
-      );
-      const newEditorState = EditorState.push(editorStateRef.current!, contentState, "insert-characters");
-      if (autocompleteRef.current!.insertSpaceAfter === false) {
-         handleChange(newEditorState);
-      } else {
-         const addSpaceState = Modifier.insertText(
-            newEditorState.getCurrentContent(),
-            newEditorState.getSelection(),
-            " ",
-            newEditorState.getCurrentInlineStyle(),
-         );
-         handleChange(EditorState.push(newEditorState, addSpaceState, "insert-characters"));
-      }
-   };
-
-   const handleAutocompleteSelected = (index?: number) => {
-      const itemIndex = index || selectedIndex;
-      const items = getAutocompleteItems();
-      if (items.length > itemIndex) {
-         const item = items[itemIndex];
-         const currentSelection = autocompleteSelectionStateRef.current!;
-         const offset = currentSelection.getFocusOffset() + searchTerm.length + 1;
-         const newSelection = currentSelection.merge({
-            focusOffset: offset,
-         });
-         if (autocompleteRef.current!.atomicBlockName) {
-            const name = autocompleteRef.current!.atomicBlockName;
-            insertAutocompleteSuggestionAsAtomicBlock(name, newSelection as SelectionState, item.value);
-         } else {
-            insertAutocompleteSuggestionAsText(newSelection as SelectionState, item.value);
-         }
-      }
-      handleAutocompleteClosed();
-   };
-
-   const handleAutocompleteClosed = () => {
-      clearSearch();
-      setSelectedIndex(0);
-      refocus();
-   };
-
-   const getAutocompleteItems = (): TAutocompleteItem[] => {
-      if (searchTerm.length < autocompleteMinSearchCharCount) {
-         return [];
-      }
-      return autocompleteRef
-         .current!.items.filter((item) => item.keys.filter((key) => key.includes(searchTerm)).length > 0)
-         .splice(0, autocompleteLimit);
-   };
-
    const handleChange = (state: EditorState) => {
       setEditorState(state);
    };
@@ -319,14 +192,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    const handleBeforeInput = (chars: string, editorState: EditorState): DraftHandleValue => {
       if (chars === " " && searchTerm.length) {
          clearSearch();
-      } else if (autocompleteSelectionStateRef.current) {
-         setSearchTerm(searchTerm + chars);
-      } else {
-         const strategy = findAutocompleteStrategy(chars);
-         if (strategy) {
-            autocompleteRef.current = strategy;
-            updateAutocompletePosition();
-         }
       }
       return isMaxLengthHandled(editorState, 1);
    };
@@ -459,15 +324,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
          handleChange(newState);
          return "handled";
       } else {
-         if (command.includes("mui-autocomplete")) {
-            if (command === "mui-autocomplete-insert") {
-               handleAutocompleteSelected();
-            }
-            if (command === "mui-autocomplete-end") {
-               handleAutocompleteClosed();
-            }
-            return "handled";
-         }
          if (props.keyCommands) {
             const keyCommand = props.keyCommands.find((comm) => comm.name === command);
             if (keyCommand) {
@@ -556,6 +412,8 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    };
 
    const handleToolbarClick = (style: string, type: string, id: string, inlineMode?: boolean) => {
+      console.log(type);
+      console.log(style);
       if (type === "inline") {
          return toggleInlineStyle(style);
       }
@@ -654,6 +512,7 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    };
 
    const confirmMedia = (url?: string, width?: number, height?: number, alignment?: TAlignment, type?: TMediaType) => {
+      // TODO медиа попапчик где-то тут
       const { urlKey } = state;
       if (!url) {
          if (urlKey) {
@@ -664,6 +523,7 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       }
 
       const contentState = editorState.getCurrentContent();
+
       const data = {
          url: url,
          width: width,
@@ -671,16 +531,20 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
          alignment: alignment,
          type: type,
       };
+      console.log(data);
 
       if (urlKey) {
          contentState.replaceEntityData(urlKey, data);
+
          const newEditorState = EditorState.push(editorState, contentState, "apply-entity");
          updateStateForPopover(EditorState.forceSelection(newEditorState, newEditorState.getCurrentContent().getSelectionAfter()));
       } else {
          const newEditorState = insertAtomicBlock(editorState, "IMAGE", data);
+         console.log(newEditorState.getCurrentContent());
          updateStateForPopover(EditorState.forceSelection(newEditorState, newEditorState.getCurrentContent().getSelectionAfter()));
       }
       setFocusMediaKey("");
+      console.groupEnd();
    };
 
    const updateStateForPopover = (editorState: EditorState) => {
@@ -765,26 +629,26 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
          const entity = contentBlock.getEntityAt(0);
          if (entity) {
             const type = contentState.getEntity(entity).getType();
-            // if (type === "IMAGE") {
-            //    return {
-            //       component: Media,
-            //       editable: false,
-            //       props: {
-            //          onClick: focusMedia,
-            //          readOnly: props.readOnly,
-            //          focusKey: focusMediaKey,
-            //       },
-            //    };
-            // } else {
-            const block = atomicBlockExists(type.toLowerCase(), props.customControls);
-            if (block) {
+            if (type === "IMAGE") {
                return {
-                  component: block.atomicComponent,
+                  component: Media,
                   editable: false,
-                  props: contentState.getEntity(contentBlock.getEntityAt(0)).getData(),
+                  props: {
+                     onClick: focusMedia,
+                     readOnly: props.readOnly,
+                     focusKey: focusMediaKey,
+                  },
                };
+            } else {
+               const block = atomicBlockExists(type.toLowerCase(), props.customControls);
+               if (block) {
+                  return {
+                     component: block.atomicComponent,
+                     editable: false,
+                     props: contentState.getEntity(contentBlock.getEntityAt(0)).getData(),
+                  };
+               }
             }
-            // }
          }
       }
       return null;
@@ -810,45 +674,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       return AtomicBlockUtils.insertAtomicBlock(newEditorStateRaw, entityKey, " ");
    };
 
-   const getAutocompleteKeyEvent = (keyboardEvent: React.KeyboardEvent<object>): string | null => {
-      const itemsLength = getAutocompleteItems().length;
-      const limit = autocompleteLimit > itemsLength ? itemsLength : autocompleteLimit;
-      switch (keyboardEvent.key) {
-         case "ArrowDown":
-            if ((selectedIndex === 0 && itemsLength === 1) || selectedIndex + 1 === limit) {
-               setSelectedIndex(0);
-            } else {
-               setSelectedIndex(selectedIndex + 1 < limit ? selectedIndex + 1 : selectedIndex);
-            }
-            return "mui-autocomplete-navigate";
-         case "ArrowUp":
-            if (selectedIndex) {
-               setSelectedIndex(selectedIndex - 1);
-            } else {
-               setSelectedIndex(limit - 1);
-            }
-            return "mui-autocomplete-navigate";
-         case "Enter":
-            return "mui-autocomplete-insert";
-         case "Escape":
-            return "mui-autocomplete-end";
-         default:
-            return null;
-      }
-   };
-
-   const updateSearchTermForKeyBinding = (keyBinding: DraftEditorCommand | null) => {
-      const text = editorStateRef.current!.getCurrentContent().getLastBlock().getText();
-
-      if (keyBinding === "backspace" && autocompleteRef.current && text.substr(text.length - 1) === autocompleteRef.current.triggerChar) {
-         clearSearch();
-      } else if (autocompletePositionRef.current && keyBinding === "backspace" && searchTerm.length) {
-         setSearchTerm(searchTerm.substr(0, searchTerm.length - 1));
-      } else if (!autocompletePositionRef.current && (keyBinding === "backspace" || keyBinding === "split-block")) {
-         clearSearch();
-      }
-   };
-
    const keyBindingFn = (e: React.KeyboardEvent<object>): string | null => {
       if (hasCommandModifier(e) && props.keyCommands) {
          const comm = props.keyCommands.find((comm) => comm.key === e.keyCode);
@@ -856,14 +681,8 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
             return comm.name;
          }
       }
-      if (searchTerm) {
-         const autocompleteEvent = getAutocompleteKeyEvent(e);
-         if (autocompleteEvent) {
-            return autocompleteEvent;
-         }
-      }
+
       const keyBinding = getDefaultKeyBinding(e);
-      updateSearchTermForKeyBinding(keyBinding);
 
       return keyBinding;
    };
@@ -900,15 +719,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
                [classes.inheritFontSize]: props.inheritFontSize,
             })}
          >
-            {props.autocomplete && autocompletePositionRef.current ? (
-               <Autocomplete
-                  items={getAutocompleteItems()}
-                  top={autocompletePositionRef.current!.top}
-                  left={autocompletePositionRef.current!.left}
-                  onClick={handleAutocompleteSelected}
-                  selectedIndex={selectedIndex}
-               />
-            ) : null}
             {props.inlineToolbar && editable && state.toolbarPosition ? (
                <Paper
                   className={classes.inlineToolbar}

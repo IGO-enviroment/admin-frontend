@@ -108,13 +108,4 @@ const getEditorBounds = (editor: HTMLElement) => {
    };
 };
 
-const getLineNumber = (editorState: EditorState) => {
-   const currentBlockKey = editorState.getSelection().getStartKey();
-   return editorState
-      .getCurrentContent()
-      .getBlockMap()
-      .keySeq()
-      .findIndex((k) => k === currentBlockKey);
-};
-
-export { getSelectionInfo, removeBlockFromMap, atomicBlockExists, isGreaterThan, clearInlineStyles, getEditorBounds, getLineNumber };
+export { getSelectionInfo, removeBlockFromMap, atomicBlockExists, isGreaterThan, clearInlineStyles, getEditorBounds };

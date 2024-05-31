@@ -1,15 +1,19 @@
 {
   "root": true,
-  "env": { "browser": true, "es2020": true },
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
-    "@feature-sliced",
-    "plugin:@conarti/feature-sliced/recommended",
     "plugin:import/recommended"
   ],
-  "ignorePatterns": ["dist", ".eslintrc.cjs"],
+  "ignorePatterns": [
+    "dist",
+    ".eslintrc.cjs"
+  ],
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
@@ -18,13 +22,18 @@
       }
     }
   },
-  "plugins": ["react-refresh"],
+  "plugins": [
+    "react-refresh"
+  ],
   "rules": {
     "no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
+    "import/no-internal-modules": "off",
     "react-refresh/only-export-components": [
       "warn",
-      { "allowConstantExport": true }
+      {
+        "allowConstantExport": true
+      }
     ]
   }
 }

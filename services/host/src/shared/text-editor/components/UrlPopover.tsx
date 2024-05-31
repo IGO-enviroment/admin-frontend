@@ -13,6 +13,7 @@ import Popover from "@mui/material/Popover";
 import { Theme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import React, { FunctionComponent, useState } from "react";
+import { MediaPopover } from "@/shared/text-editor/components/MediaPopover";
 
 export type TAlignment = "left" | "center" | "right";
 
@@ -91,73 +92,7 @@ export const UrlPopover: FunctionComponent<IUrlPopoverStateProps> = (props) => {
                         }}
                      />
                   </Grid>
-                  {props.isMedia ? (
-                     <>
-                        <Grid item xs={12}>
-                           <ButtonGroup fullWidth>
-                              <Button
-                                 color={!data.type || data.type === "image" ? "primary" : "inherit"}
-                                 size="small"
-                                 onClick={() => setData({ ...data, type: "image" })}
-                              >
-                                 <InsertPhotoIcon />
-                              </Button>
-                              <Button
-                                 color={data.type === "video" ? "primary" : "inherit"}
-                                 size="small"
-                                 onClick={() => setData({ ...data, type: "video" })}
-                              >
-                                 <MovieIcon />
-                              </Button>
-                           </ButtonGroup>
-                        </Grid>
-                        <Grid item xs={6}>
-                           <TextField
-                              onChange={(event) => onSizeChange(event.target.value, "width")}
-                              value={data.width || ""}
-                              label="Width"
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
-                           />
-                        </Grid>
-                        <Grid item xs={6}>
-                           <TextField
-                              onChange={(event) => onSizeChange(event.target.value, "height")}
-                              value={data.height || ""}
-                              label="Height"
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
-                           />
-                        </Grid>
-                        <Grid item xs={12}>
-                           <ButtonGroup fullWidth>
-                              <Button
-                                 color={data.alignment === "left" ? "primary" : "inherit"}
-                                 size="small"
-                                 onClick={() => setData({ ...data, alignment: "left" })}
-                              >
-                                 <FormatAlignLeft />
-                              </Button>
-                              <Button
-                                 color={data.alignment === "center" ? "primary" : "inherit"}
-                                 size="small"
-                                 onClick={() => setData({ ...data, alignment: "center" })}
-                              >
-                                 <FormatAlignCenter />
-                              </Button>
-                              <Button
-                                 color={data.alignment === "right" ? "primary" : "inherit"}
-                                 size="small"
-                                 onClick={() => setData({ ...data, alignment: "right" })}
-                              >
-                                 <FormatAlignRight />
-                              </Button>
-                           </ButtonGroup>
-                        </Grid>
-                     </>
-                  ) : null}
+                  {props.isMedia ? <MediaPopover data={data} setData={setData} /> : null}
                </Grid>
                <Grid container item xs={12} direction="row" justifyContent="flex-end">
                   {props.data && props.data.url ? (

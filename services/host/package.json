@@ -20,6 +20,7 @@
     "@mui/styles": "^5.15.14",
     "@packages/build-config": "*",
     "@reduxjs/toolkit": "^2.2.1",
+    "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "draft-js": "^0.11.7",
     "immutable": "^3.7.6",

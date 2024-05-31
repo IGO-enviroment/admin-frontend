@@ -514,10 +514,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
    const confirmMedia = (url?: string, width?: number, height?: number, alignment?: TAlignment, type?: TMediaType) => {
       // TODO медиа попапчик где-то тут
       const { urlKey } = state;
-      console.group("PIZDA");
-      console.log(editorState);
-      console.log(urlKey);
-      console.log(url);
       if (!url) {
          if (urlKey) {
             removeMedia();
@@ -527,8 +523,6 @@ const MUIEditor: ForwardRefRenderFunction<TMUIRichTextEditorRef, IMUIRichTextEdi
       }
 
       const contentState = editorState.getCurrentContent();
-      console.log(contentState);
-      console.log(contentState.getAllEntities());
 
       const data = {
          url: url,

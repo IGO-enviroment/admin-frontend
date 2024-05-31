@@ -84,7 +84,6 @@ const EventsList = () => {
             </Table>
          </TableContainer>
          <Drawer open={isVisible} onClose={() => closeDrawer()}>
-            PIZDA
             <FormProvider {...methods}>
                <form onSubmit={methods.handleSubmit(handleSubmit)}>
                   <Stack sx={{ gap: "20px" }}>

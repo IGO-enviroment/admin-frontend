@@ -38,7 +38,7 @@ const [fields, setFields] = useState<{field: ReactNode, id: number}[]>([])
    };
 
    const addPhotoForm = () => {
-      const photoField = <PhotoInput />
+      const photoField = <PhotoInput name="dad" />
       setFields(prev => [...prev, {field: photoField, id: Math.random() * 10000}])
    }
 

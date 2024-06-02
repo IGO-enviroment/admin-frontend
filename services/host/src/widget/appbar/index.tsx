@@ -18,6 +18,9 @@ export const Appbar = () => {
                <Link href="/events" underline="none" color="inherit" sx={{ typography: "body1" }}>
                   Мероприятия
                </Link>
+               <Link href="/event-types" underline="none" color="inherit" sx={{ typography: "body1" }}>
+                  Типы мероприятий
+               </Link>
             </Toolbar>
          </AppBar>
       </Box>

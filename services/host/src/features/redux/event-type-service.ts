@@ -4,32 +4,28 @@ import { baseURL } from "@/shared/constants";
 import { TokenService } from "@/shared/services/token-service";
 import { serialize } from "object-to-formdata";
 
-export const allEvents = "/v1/admin/events";
+export const allEvents = "/v1/admin/event-types/create";
 
-export const eventsApi = createApi({
+export const eventsTypeApi = createApi({
    reducerPath: "allEvents",
    baseQuery: fetchBaseQuery({
       baseUrl: baseURL,
    }),
-   tagTypes: ["Events"],
+   tagTypes: ["EventTypes"],
    endpoints: (build) => ({
-      getAllEvents: build.query<any, string>({
+      getAllEventTypes: build.query<any, string>({
          query: () => ({ url: allEvents }),
-         providesTags: ["Events"],
+         providesTags: ["EventTypes"],
       }),
-      createEvent: build.mutation({
+      createEventType: build.mutation({
          query: (data) => {
-            const formData = serialize(
-               data,
-               { nullsAsUndefineds: true }
-            );
             return {
                url: allEvents,
                method: "POST",
-               body: formData,
+               body: data,
             };
          },
-         invalidatesTags: ["Events"],
+         invalidatesTags: ["EventTypes"],
       }),
    }),
 });

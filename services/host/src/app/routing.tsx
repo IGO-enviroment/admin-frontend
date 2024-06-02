@@ -11,7 +11,8 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { eventsApi } from "@/features/redux/event-service";
-import { EventsList } from "@/pages/events";
+import { EventsList } from "@/pages/event-page/events";
+import { EventsTypeList } from "@/pages/event-types/event-types-page";
 
 export const Routing = () => {
    return (
@@ -42,6 +43,10 @@ const commonPart: RouteObject[] = [
    {
       path: "events",
       element: <EventsList />,
+   },
+   {
+      path: "event-types",
+      element: <EventsTypeList />,
    },
 ];
 

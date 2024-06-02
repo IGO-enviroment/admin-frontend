@@ -27,7 +27,7 @@ export const components: Components<Omit<Theme, "components">> = {
          anchor: "right",
          sx: {
             "& .MuiDrawer-paper": {
-               width: "480px",
+               width: "50vw",
             },
          },
       },

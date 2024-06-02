@@ -42,6 +42,7 @@ export const useDrawerState = (): IDrawerState => {
 
    const openDrawer = () => {
       setIsMounted(true);
+      console.log('dasdas')
       setTimeout(() => setIsVisible(true));
    };
 

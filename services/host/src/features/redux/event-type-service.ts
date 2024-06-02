@@ -7,7 +7,7 @@ import { serialize } from "object-to-formdata";
 export const allEvents = "/v1/admin/event-types/create";
 
 export const eventsTypeApi = createApi({
-   reducerPath: "allEvents",
+   reducerPath: "allEventsTypes",
    baseQuery: fetchBaseQuery({
       baseUrl: baseURL,
    }),

@@ -1,22 +1,8 @@
-import { eventsApi } from "@/features/redux/event-service";
 import { useDrawerState } from "@/shared/hooks/use-drawer-state";
-import { Box, Button, Container, Drawer, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
+import { Box, Button, Container, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { eventsTypeApi } from "@/features/redux/event-type-service";
 import { EventTypeDrawer } from "./event-type-drawer";
-
-interface EventDTO {
-    title: string;
-    description?: string;
-    startAt?: string;
-    duration?: string;
-    ticketCount?: number;
-    area?: number;
-    type?: number;
-    tags?: number[];
-    costs?: any[];
-}
 
 export const EventsTypeList = () => {
     const { isVisible, closeDrawer, openDrawer } = useDrawerState();

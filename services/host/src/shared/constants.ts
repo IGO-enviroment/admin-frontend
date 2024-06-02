@@ -1,11 +1,18 @@
 import axios from "axios";
+import { getCookie } from "@/shared/cookies/get";
 
-export const baseURL = "https://e520-92-248-190-11.ngrok-free.app";
+export const baseURL = "https://98c1-178-46-71-134.ngrok-free.app/";
 
 const ApiInstance = axios.create({
    baseURL,
 });
 
-const ApiAuthInstance = axios.create({
+export const ApiAuthInstance = axios.create({
    baseURL,
+});
+
+ApiAuthInstance.interceptors.request.use((config) => {
+   config.headers.Authorization = getCookie("museum_client_auth");
+
+   return config;
 });

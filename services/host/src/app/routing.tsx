@@ -2,22 +2,21 @@ import { RouteObject, useRoutes } from "react-router-dom";
 import { ContentForm } from "@/widget/content-form";
 import { TextEditor } from "@/features/editors/text-editor";
 import { AppLayout } from "@/widget/AppLayout";
-import { useDrawerState } from "@/shared/hooks/use-drawer-state";
-import { Drawer, Stack, Table, TableCell, TableHead, TableRow, TableContainer, TableBody } from "@mui/material";
-import Button from "@mui/material/Button";
-import { FormProvider, useForm } from "react-hook-form";
 import React from "react";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import { eventsApi } from "@/features/redux/event-service";
 import { EventsList } from "@/pages/event-page/events";
 import { EventsTypeList } from "@/pages/event-types/event-types-page";
+import { AuthGuard, AuthStoreProvider, UserStoreProvider } from "@/pages/login-page";
 
 export const Routing = () => {
    return (
       <>
-         <Routes />
+         <UserStoreProvider>
+            <AuthStoreProvider>
+               <AuthGuard>
+                  <Routes />
+               </AuthGuard>
+            </AuthStoreProvider>
+         </UserStoreProvider>
       </>
    );
 };
@@ -25,7 +24,6 @@ export const Routing = () => {
 function Routes() {
    return useRoutes(microfrontendRoutes);
 }
-
 
 const commonPart: RouteObject[] = [
    {

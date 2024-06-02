@@ -1,58 +1,18 @@
-import { eventsApi } from "@/features/redux/event-service";
-import { useDrawerState } from "@/shared/hooks/use-drawer-state";
-import {
-   Box,
-   Button,
-   Container,
-   Drawer,
-   Stack,
-   Table,
-   TableBody,
-   TableCell,
-   TableContainer,
-   TableHead,
-   TableRow,
-   TextField,
-} from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
+import { Box, Button, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { MultiPhotoInput } from "@/features/editors/multi-photo-input";
-import { PhotoInput } from "@/features/editors/photoInput";
-import { EventDrawer } from "./event-drawer";
+import { EventTypeDrawer } from "@/pages/event-types/event-type-drawer";
+import { useDrawerState } from "@/shared/hooks/use-drawer-state";
+import { TagDrawer } from "@/pages/tags-page/tag-drawer";
 
-interface EventDTO {
-   title: string;
-   description?: string;
-   startAt?: string;
-   duration?: string;
-   ticketCount?: number;
-   area?: number;
-   type?: number;
-   tags?: number[];
-   costs?: any[];
-}
-
-export const EventsList = () => {
-   const { isVisible, closeDrawer, openDrawer, isMounted } = useDrawerState();
-
-   const { data } = eventsApi.useGetAllEventsQuery("");
-   const [createEvent, { error }] = eventsApi.useCreateEventMutation({});
-   // console.log(g);
-
-   const rows = data?.events;
-   const handleSubmit = async (data: any) => {
-      await createEvent(data);
-      if (!error) {
-         closeDrawer();
-      }
-   };
-
+export const TagsPage = () => {
+   const { isVisible, closeDrawer, openDrawer } = useDrawerState();
+   const rows: any[] = [];
    return (
       <>
          <Container maxWidth={"xl"}>
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: "30px", alignItems: "center" }}>
                <h1>Cобытия</h1>
-               <Button onClick={openDrawer}>Создать событие</Button>
+               <Button onClick={openDrawer}>Создать тип Мероприятия</Button>
             </Box>
             <TableContainer component={Paper}>
                <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -83,7 +43,7 @@ export const EventsList = () => {
                </Table>
             </TableContainer>
          </Container>
-         {isMounted && <EventDrawer closeDrawer={closeDrawer} handleSubmit={handleSubmit} isVisible={isVisible} />}
+         {/*<TagDrawer closeDrawer={closeDrawer} handleSubmit={handleSubmit} isVisible={isVisible} />*/}
       </>
    );
 };

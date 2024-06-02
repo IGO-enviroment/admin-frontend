@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { baseURL } from "@/shared/constants";
-import { TokenService } from "@/shared/services/token-service";
 import { serialize } from "object-to-formdata";
 
 export const allEvents = "/v1/admin/events";

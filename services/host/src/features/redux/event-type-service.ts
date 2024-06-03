@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseURL } from "@/shared/constants";
 import { TokenService } from "@/shared/services/token-service";
 import { serialize } from "object-to-formdata";
+import { getCookie } from "@/shared/cookies/get";
 
 export const allEvents = "/v1/admin/event-types/create";
 
@@ -14,7 +15,12 @@ export const eventsTypeApi = createApi({
    tagTypes: ["EventTypes"],
    endpoints: (build) => ({
       getAllEventTypes: build.query<any, string>({
-         query: () => ({ url: allEvents }),
+         query: () => ({
+            url: allEvents,
+            headers: {
+               Authorization: getCookie("museum_client_auth"),
+            },
+         }),
          providesTags: ["EventTypes"],
       }),
       createEventType: build.mutation({
@@ -22,6 +28,9 @@ export const eventsTypeApi = createApi({
             return {
                url: allEvents,
                method: "POST",
+               headers: {
+                  Authorization: getCookie("museum_client_auth"),
+               },
                body: data,
             };
          },

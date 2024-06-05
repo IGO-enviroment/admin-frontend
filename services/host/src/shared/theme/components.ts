@@ -32,4 +32,11 @@ export const components: Components<Omit<Theme, "components">> = {
          },
       },
    },
+
+   MuiSnackbar: {
+      defaultProps: {
+         autoHideDuration: 3000,
+         anchorOrigin: { vertical: "bottom", horizontal: "right" },
+      },
+   },
 };

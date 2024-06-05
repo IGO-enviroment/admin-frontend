@@ -1,24 +1,11 @@
 import { eventsApi } from "@/features/redux/event-service";
 import { useDrawerState } from "@/shared/hooks/use-drawer-state";
-import {
-   Box,
-   Button,
-   Container,
-   Drawer,
-   Stack,
-   Table,
-   TableBody,
-   TableCell,
-   TableContainer,
-   TableHead,
-   TableRow,
-   TextField,
-} from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
+import { Box, Button, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { MultiPhotoInput } from "@/features/editors/multi-photo-input";
-import { PhotoInput } from "@/features/editors/photoInput";
 import { EventDrawer } from "./event-drawer";
+import { useToast } from "@/shared/hooks/use-toast";
+import React from "react";
+import { SuccessToast } from "@/shared/toast/success-toast";
 
 interface EventDTO {
    title: string;
@@ -31,18 +18,18 @@ interface EventDTO {
    tags?: number[];
    costs?: any[];
 }
-
 export const EventsList = () => {
    const { isVisible, closeDrawer, openDrawer, isMounted } = useDrawerState();
 
    const { data } = eventsApi.useGetAllEventsQuery("");
    const [createEvent, { error }] = eventsApi.useCreateEventMutation({});
-   // console.log(g);
 
    const rows = data?.events;
+   const { isVisible: isVisibleToast, openToast, closeToast } = useToast();
    const handleSubmit = async (data: any) => {
       await createEvent(data);
       if (!error) {
+         openToast();
          closeDrawer();
       }
    };
@@ -84,6 +71,7 @@ export const EventsList = () => {
             </TableContainer>
          </Container>
          {isMounted && <EventDrawer closeDrawer={closeDrawer} handleSubmit={handleSubmit} isVisible={isVisible} />}
+         <SuccessToast isVisible={isVisibleToast} closeToast={closeToast} text={"Мероприятие успешно создано"} />
       </>
    );
 };

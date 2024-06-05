@@ -1,26 +1,24 @@
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import { AppBar, Link, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import { Link } from "react-router-dom";
 
 export const Appbar = () => {
    return (
       <Box sx={{ flexGrow: 1 }}>
          <AppBar position="static" elevation={2} sx={{ mb: "40px" }}>
             <Toolbar sx={{ display: "flex", gap: "40px" }}>
-               <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                  <HomeRoundedIcon />
-               </IconButton>
                <Typography variant="h6">Admin</Typography>
-               <Link href="/form" underline="none" color="inherit" sx={{ typography: "body1" }}>
+               <Box component={Link} to={"/form"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
                   Создать новость
-               </Link>
-               <Link href="/events" underline="none" color="inherit" sx={{ typography: "body1" }}>
+               </Box>
+
+               <Box component={Link} to={"/events"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
                   Мероприятия
-               </Link>
-               <Link href="/event-types" underline="none" color="inherit" sx={{ typography: "body1" }}>
+               </Box>
+
+               <Box component={Link} to={"/event-types"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
                   Типы мероприятий
-               </Link>
+               </Box>
             </Toolbar>
          </AppBar>
       </Box>

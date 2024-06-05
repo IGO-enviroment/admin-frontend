@@ -72,19 +72,15 @@ const login = async ({ email, password }: { email: string; password: string }) =
 
 export const AuthGuard: FC<{ children: ReactNode }> = ({ children }) => {
    const { isAuth, setIsAuth } = useAuthContext();
-   // const isAuth = true;
 
    const { userStore } = useUserContext();
 
    const [isLoading, setIsLoading] = useState(false);
 
    const tryFetchUser = async () => {
-      console.log("ffff");
       try {
          setIsLoading(true);
          const user = await fetchUser();
-
-         console.log(user);
 
          userStore.setUser(user);
          setIsAuth(true);

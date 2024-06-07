@@ -3,33 +3,43 @@ import { Box, Button, Container, Stack, Table, TableBody, TableCell, TableContai
 import Paper from "@mui/material/Paper";
 import { eventsTypeApi } from "@/features/redux/event-type-service";
 import { EventTypeDrawer } from "./event-type-drawer";
-import { useToast } from "@/shared/hooks/use-toast";
-import { SuccessToast } from "@/shared/toast/success-toast";
-import React from "react";
+import React, { useState } from "react";
+import { LongMenu } from "@/shared/table-menu/table-menu";
 
 export const EventsTypeList = () => {
    const { isVisible, closeDrawer, openDrawer, isMounted } = useDrawerState();
 
-   const { data } = eventsTypeApi.useGetAllEventTypesQuery("");
-   const [createTypeEvent, { error }] = eventsTypeApi.useCreateEventTypeMutation({});
-   const rows: any[] = [];
-   const { isVisible: isVisibleToast, openToast, closeToast } = useToast();
+   const [editEventType, setEditEventType] = useState(null);
 
-   const handleSubmit = async (data: any) => {
-      await createTypeEvent(data);
-      if (!error) {
-         openToast();
-         closeDrawer();
-      }
+   const { data } = eventsTypeApi.useGetAllEventTypesQuery("");
+   const [deleteTypeEvent, { error: deleteError }] = eventsTypeApi.useDeleteAreaMutation({});
+
+   console.log(data);
+
+   const handleDelete = async (id: string) => {
+      await deleteTypeEvent(id);
+      // if (!deleteError) {
+      //    // openToast();
+      //    closeDrawer();
+      // }
+   };
+
+   const handleUpdate = async (areaData: any) => {
+      setEditEventType(areaData);
+      openDrawer();
+   };
+
+   const handleCreate = () => {
+      setEditEventType(null);
+      openDrawer();
    };
 
    if (!data)
       return (
          <Stack>
             <Typography>Пока нет типов</Typography>
-            <Button onClick={openDrawer}>Создать тип Мероприятия</Button>
-            {isMounted && <EventTypeDrawer closeDrawer={closeDrawer} handleSubmit={handleSubmit} isVisible={isVisible} />}
-            <SuccessToast isVisible={isVisibleToast} closeToast={closeToast} text={"Тип мероприятия успешно создано"} />
+            <Button onClick={handleCreate}>Создать тип Мероприятия</Button>
+            {isMounted && <EventTypeDrawer closeDrawer={closeDrawer} isVisible={isVisible} />}
          </Stack>
       );
 
@@ -38,39 +48,36 @@ export const EventsTypeList = () => {
          <Container maxWidth={"xl"}>
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: "30px", alignItems: "center" }}>
                <h1>Cобытия</h1>
-               <Button onClick={openDrawer}>Создать тип Мероприятия</Button>
+               <Button onClick={handleCreate}>Создать тип Мероприятия</Button>
             </Box>
             <TableContainer component={Paper}>
                <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                      <TableRow>
-                        <TableCell align="center">title</TableCell>
-                        <TableCell align="center">publich</TableCell>
-                        <TableCell align="center">ticketCount</TableCell>
-                        <TableCell align="center">type</TableCell>
-                        <TableCell align="center">area</TableCell>
-                        <TableCell align="center">created_at</TableCell>
+                        <TableCell align="center">Name</TableCell>
+                        <TableCell align="center">Description</TableCell>
+                        <TableCell align="center">IsVisible</TableCell>
                      </TableRow>
                   </TableHead>
                   <TableBody>
-                     {rows?.map((row: any) => (
-                        <TableRow key={row.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                     {data?.map((row: any, index: number) => (
+                        <TableRow
+                           key={`${row.id}_${index}`}
+                           sx={{ "&:last-child td, &:last-child th": { border: 0 }, position: "relative" }}
+                        >
                            <TableCell component="th" scope="row" align="center">
-                              {row.title}
+                              {row.Name}
                            </TableCell>
-                           <TableCell align="center">{`${row.publich}`}</TableCell>
-                           <TableCell align="center">{row.ticketCount}</TableCell>
-                           <TableCell align="center">{row.type}</TableCell>
-                           <TableCell align="center">{row.area}</TableCell>
-                           <TableCell align="center">{row.created_at}</TableCell>
+                           <TableCell align="center">{row.Description}</TableCell>
+                           <TableCell align="center">{`${row.IsVisible}`}</TableCell>
+                           <LongMenu onDeleteClick={() => handleDelete(row.id)} onEditClick={() => handleUpdate(row)} />
                         </TableRow>
                      ))}
                   </TableBody>
                </Table>
             </TableContainer>
          </Container>
-         {isMounted && <EventTypeDrawer closeDrawer={closeDrawer} handleSubmit={handleSubmit} isVisible={isVisible} />}
-         <SuccessToast isVisible={isVisibleToast} closeToast={closeToast} text={"Тип мероприятия успешно создано"} />
+         {isMounted && <EventTypeDrawer closeDrawer={closeDrawer} editEventType={editEventType} isVisible={isVisible} />}
       </>
    );
 };

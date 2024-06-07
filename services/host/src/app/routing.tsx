@@ -6,6 +6,7 @@ import React from "react";
 import { EventsList } from "@/pages/event-page/events";
 import { EventsTypeList } from "@/pages/event-types/event-types-page";
 import { AuthGuard, AuthStoreProvider, UserStoreProvider } from "@/pages/login-page";
+import { AreaPage } from "@/pages/area-apge/area-page";
 
 export const Routing = () => {
    return (
@@ -45,6 +46,11 @@ const commonPart: RouteObject[] = [
    {
       path: "event-types",
       element: <EventsTypeList />,
+   },
+
+   {
+      path: "area",
+      element: <AreaPage />,
    },
 ];
 

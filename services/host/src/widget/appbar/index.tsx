@@ -19,6 +19,10 @@ export const Appbar = () => {
                <Box component={Link} to={"/event-types"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
                   Типы мероприятий
                </Box>
+
+               <Box component={Link} to={"/area"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
+                  Площадки
+               </Box>
             </Toolbar>
          </AppBar>
       </Box>

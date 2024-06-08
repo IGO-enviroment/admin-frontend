@@ -4,8 +4,9 @@ import { Box, Button, Container, Table, TableBody, TableCell, TableContainer, Ta
 import Paper from "@mui/material/Paper";
 import { EventDrawer } from "./event-drawer";
 import { useToast } from "@/shared/hooks/use-toast";
-import React from "react";
+import React, { useState } from "react";
 import { SuccessToast } from "@/shared/toast/success-toast";
+import { LongMenu } from "@/shared/table-menu/table-menu";
 
 interface EventDTO {
    title: string;
@@ -20,12 +21,12 @@ interface EventDTO {
 }
 export const EventsList = () => {
    const { isVisible, closeDrawer, openDrawer, isMounted } = useDrawerState();
+   const { isVisible: isVisibleToast, openToast, closeToast } = useToast();
 
    const { data } = eventsApi.useGetAllEventsQuery("");
    const [createEvent, { error }] = eventsApi.useCreateEventMutation({});
 
    const rows = data?.events;
-   const { isVisible: isVisibleToast, openToast, closeToast } = useToast();
    const handleSubmit = async (data: any) => {
       await createEvent(data);
       if (!error) {
@@ -55,7 +56,7 @@ export const EventsList = () => {
                   </TableHead>
                   <TableBody>
                      {rows?.map((row: any) => (
-                        <TableRow key={row.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                        <TableRow key={row.id} sx={{ "&:last-child td, &:last-child th": { border: 0 }, position: "relative" }}>
                            <TableCell component="th" scope="row" align="center">
                               {row.title}
                            </TableCell>
@@ -64,6 +65,7 @@ export const EventsList = () => {
                            <TableCell align="center">{row.type}</TableCell>
                            <TableCell align="center">{row.area}</TableCell>
                            <TableCell align="center">{row.created_at}</TableCell>
+                           <LongMenu onDeleteClick={() => {}} onEditClick={() => {}} />
                         </TableRow>
                      ))}
                   </TableBody>

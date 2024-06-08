@@ -1,43 +1,44 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 import { baseURL } from "@/shared/constants";
 import { getCookie } from "@/shared/cookies/get";
 
-export const allEvents = "/v1/admin/event-types";
+export const AREAS = "/v1/admin/areas";
 
-export const eventsTypeApi = createApi({
-   reducerPath: "allEventsTypes",
+export const areaApi = createApi({
+   reducerPath: "areas",
    baseQuery: fetchBaseQuery({
       baseUrl: baseURL,
    }),
-   tagTypes: ["EventTypes"],
+   tagTypes: ["areas"],
    endpoints: (build) => ({
-      getAllEventTypes: build.query<any, string>({
+      getAllAreas: build.query<any, string>({
          query: () => ({
-            url: allEvents,
+            url: AREAS,
             headers: {
                Authorization: getCookie("museum_client_auth"),
+               "ngrok-skip-browser-warning": "true",
             },
          }),
-         providesTags: ["EventTypes"],
+         providesTags: ["areas"],
       }),
-      createEventType: build.mutation({
+      createArea: build.mutation({
          query: (data) => {
             return {
-               url: `${allEvents}/create`,
+               url: `${AREAS}/create`,
                method: "POST",
                headers: {
                   Authorization: getCookie("museum_client_auth"),
+                  "ngrok-skip-browser-warning": "true",
                },
                body: data,
             };
          },
-         invalidatesTags: ["EventTypes"],
+         invalidatesTags: ["areas"],
       }),
       deleteArea: build.mutation({
          query: (id) => {
             return {
-               url: `${allEvents}/${id}`,
+               url: `${AREAS}/${id}`,
                method: "DELETE",
                headers: {
                   Authorization: getCookie("museum_client_auth"),
@@ -45,12 +46,12 @@ export const eventsTypeApi = createApi({
                },
             };
          },
-         invalidatesTags: ["EventTypes"],
+         invalidatesTags: ["areas"],
       }),
       updateArea: build.mutation({
          query: ({ data, id }) => {
             return {
-               url: `${allEvents}/${id}`,
+               url: `${AREAS}/${id}`,
                method: "PUT",
                headers: {
                   Authorization: getCookie("museum_client_auth"),
@@ -59,7 +60,7 @@ export const eventsTypeApi = createApi({
                body: data,
             };
          },
-         invalidatesTags: ["EventTypes"],
+         invalidatesTags: ["areas"],
       }),
    }),
 });

@@ -1,15 +1,39 @@
 import { Button, Container, Drawer, Stack, TextField } from "@mui/material";
 import React, { FC } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { SuccessToast } from "@/shared/toast/success-toast";
+import { useToast } from "@/shared/hooks/use-toast";
+import { eventsTypeApi } from "@/features/redux/event-type-service";
 
 interface EventTypeDrawerProp {
    isVisible: boolean;
-   handleSubmit: (data: any) => void | Promise<void>;
    closeDrawer: () => void;
+   editEventType?: any;
 }
 
-export const EventTypeDrawer: FC<EventTypeDrawerProp> = ({ closeDrawer, handleSubmit, isVisible }) => {
-   const methods = useForm({});
+export const EventTypeDrawer: FC<EventTypeDrawerProp> = ({ closeDrawer, isVisible, editEventType }) => {
+   const methods = useForm({
+      defaultValues: editEventType ?? null,
+   });
+   const { isVisible: isVisibleToast, openToast, closeToast } = useToast();
+   const [updateTypeEvent, { error: updateError }] = eventsTypeApi.useUpdateAreaMutation({});
+   const [createTypeEvent, { error: createError }] = eventsTypeApi.useCreateEventTypeMutation({});
+
+   const handleSubmit = async (data: any) => {
+      if (editEventType) {
+         await updateTypeEvent({ data, id: editEventType.id });
+         if (!updateError) {
+            closeDrawer();
+         }
+         return;
+      }
+      await createTypeEvent(data);
+      if (!createError) {
+         openToast();
+         closeDrawer();
+      }
+   };
+
    return (
       <Drawer open={isVisible} onClose={() => closeDrawer()}>
          <Container sx={{ my: "40px" }}>
@@ -24,6 +48,7 @@ export const EventTypeDrawer: FC<EventTypeDrawerProp> = ({ closeDrawer, handleSu
                </form>
             </FormProvider>
          </Container>
+         <SuccessToast isVisible={isVisibleToast} closeToast={closeToast} text={"Тип мероприятия успешно создано"} />
       </Drawer>
    );
 };

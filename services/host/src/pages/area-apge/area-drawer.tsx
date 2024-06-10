@@ -4,6 +4,7 @@ import { Button, Container, Drawer, Stack, TextField } from "@mui/material";
 import { areaApi } from "@/features/redux/area-service";
 import { SuccessToast } from "@/shared/toast/success-toast";
 import { useToast } from "@/shared/hooks/use-toast";
+import { BooleanField } from "@/shared/controlled-form/boolean-field";
 
 interface AreaDrawerProp {
    isVisible: boolean;
@@ -46,6 +47,7 @@ export const AreaDrawer: FC<AreaDrawerProp> = ({ closeDrawer, isVisible, editAre
                      <TextField {...methods.register("addressValue")} label="addressValue" variant="outlined" />
                      <TextField {...methods.register("longitude")} label="longitude" variant="outlined" />
                      <TextField {...methods.register("latitude")} label="latitude" variant="outlined" />
+                     <BooleanField name={"publish"} label="publish" />
                   </Stack>
                   <Button type="submit">Сохранить</Button>
                </form>

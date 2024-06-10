@@ -45,6 +45,7 @@ export const eventsTypeApi = createApi({
                },
             };
          },
+
          invalidatesTags: ["EventTypes"],
       }),
       updateArea: build.mutation({

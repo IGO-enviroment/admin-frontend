@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const defaultDrawerTransitionTime = 200;
+const defaultDrawerTransitionTime = 500;
 
 export interface IDrawerState {
    /**
@@ -42,7 +42,6 @@ export const useDrawerState = (): IDrawerState => {
 
    const openDrawer = () => {
       setIsMounted(true);
-      console.log('dasdas')
       setTimeout(() => setIsVisible(true));
    };
 

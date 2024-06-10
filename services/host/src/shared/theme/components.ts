@@ -24,6 +24,7 @@ export const components: Components<Omit<Theme, "components">> = {
    },
    MuiDrawer: {
       defaultProps: {
+         transitionDuration: 500,
          anchor: "right",
          sx: {
             "& .MuiDrawer-paper": {

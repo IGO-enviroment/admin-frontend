@@ -7,17 +7,20 @@ import { EventsList } from "@/pages/event-page/events";
 import { EventsTypeList } from "@/pages/event-types/event-types-page";
 import { AuthGuard, AuthStoreProvider, UserStoreProvider } from "@/pages/login-page";
 import { AreaPage } from "@/pages/area-apge/area-page";
+import { SnackbarProvider } from "notistack";
 
 export const Routing = () => {
    return (
       <>
-         <UserStoreProvider>
-            <AuthStoreProvider>
-               <AuthGuard>
-                  <Routes />
-               </AuthGuard>
-            </AuthStoreProvider>
-         </UserStoreProvider>
+         <SnackbarProvider maxSnack={5}>
+            <UserStoreProvider>
+               <AuthStoreProvider>
+                  <AuthGuard>
+                     <Routes />
+                  </AuthGuard>
+               </AuthStoreProvider>
+            </UserStoreProvider>
+         </SnackbarProvider>
       </>
    );
 };

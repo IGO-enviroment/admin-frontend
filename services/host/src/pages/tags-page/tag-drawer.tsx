@@ -1,7 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { Button, Container, Drawer, Stack, TextField } from "@mui/material";
-import { BooleanField } from "@/shared/controlled-form/boolean-field";
 import React, { FC } from "react";
 import { tagApi } from "@/features/redux/tag-service";
 
@@ -20,7 +19,7 @@ export const TagDrawer: FC<TagDrawerProp> = ({ closeDrawer, isVisible, editTag }
 
    const handleSubmit = async (data: any) => {
       if (editTag) {
-         const res = await updateTag({ data, id: editTag.Id });
+         const res = await updateTag({ data, id: editTag.id });
          if ("error" in res && "originalStatus" in res.error && res.error.originalStatus > 299) {
             enqueueSnackbar("Ошибка при редактировании тега", { variant: "error" });
             return;

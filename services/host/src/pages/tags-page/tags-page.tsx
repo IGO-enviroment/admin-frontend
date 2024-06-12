@@ -86,7 +86,7 @@ export const TagsPage = () => {
                            <TableCell align="center">{`${row.name}`}</TableCell>
                            <TableCell align="center">{row.description}</TableCell>
                            <TableCell align="center">{row.groupName}</TableCell>
-                           <LongMenu onDeleteClick={() => handleDelete(row.Id)} onEditClick={() => handleUpdate(row)} />
+                           <LongMenu onDeleteClick={() => handleDelete(row.id)} onEditClick={() => handleUpdate(row)} />
                         </TableRow>
                      ))}
                   </TableBody>

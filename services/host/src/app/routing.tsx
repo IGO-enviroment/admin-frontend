@@ -8,6 +8,7 @@ import { EventsTypeList } from "@/pages/event-types/event-types-page";
 import { AuthGuard, AuthStoreProvider, UserStoreProvider } from "@/pages/login-page";
 import { AreaPage } from "@/pages/area-apge/area-page";
 import { SnackbarProvider } from "notistack";
+import { TagsPage } from "@/pages/tags-page/tags-page";
 
 export const Routing = () => {
    return (
@@ -49,6 +50,10 @@ const commonPart: RouteObject[] = [
    {
       path: "event-types",
       element: <EventsTypeList />,
+   },
+   {
+      path: "tags",
+      element: <TagsPage />,
    },
 
    {

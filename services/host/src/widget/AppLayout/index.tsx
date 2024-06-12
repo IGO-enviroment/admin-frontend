@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import * as React from "react";
 import { CSSObject, styled, Theme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -10,7 +10,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { retry } from "@reduxjs/toolkit/query";
 import { Link } from "react-router-dom";
-import { Stack } from "@mui/material";
+import { alpha, ListItemButton, Stack } from "@mui/material";
+import { forwardRef } from "react";
 
 export const AppLayout = () => (
    <>
@@ -74,7 +75,7 @@ const Main = styled("main")<{ open: boolean }>(({ theme, open }) => ({
    }),
 }));
 
-export default function MiniDrawer() {
+function MiniDrawer() {
    const [open, setOpen] = React.useState(true);
 
    const handleDrawerOpen = () => {
@@ -114,25 +115,84 @@ export default function MiniDrawer() {
    );
 }
 
+import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
+import EventRoundedIcon from "@mui/icons-material/EventRounded";
+import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import StadiumRoundedIcon from "@mui/icons-material/StadiumRounded";
+import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
+
+const navConfig = [
+   {
+      title: "Создать новость",
+      path: "/form",
+      icon: <NewspaperRoundedIcon />,
+   },
+   {
+      title: "Мероприятия",
+      path: "/events",
+      icon: <EventRoundedIcon />,
+   },
+   {
+      title: "Типы мероприятий",
+      path: "/event-types",
+      icon: <CalendarTodayRoundedIcon />,
+   },
+   {
+      title: "Площадки",
+      path: "/area",
+      icon: <StadiumRoundedIcon />,
+   },
+   {
+      title: "Теги",
+      path: "/tags",
+      icon: <LocalOfferRoundedIcon />,
+   },
+];
+
+const RouterLink = forwardRef<any, any>(({ href, ...other }, ref) => <Link ref={ref} to={href} {...other} />);
+
+function NavItem({ item }: { item: { title: string; path: string; icon: any } }) {
+   const pathname = useLocation();
+
+   const active = item.path === pathname.pathname;
+
+   return (
+      <ListItemButton
+         component={RouterLink}
+         href={item.path}
+         sx={{
+            minHeight: 44,
+            borderRadius: 0.75,
+            typography: "body2",
+            color: "text.secondary",
+            textTransform: "capitalize",
+            fontWeight: "fontWeightMedium",
+            ...(active && {
+               color: "primary.main",
+               fontWeight: "fontWeightSemiBold",
+               bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+               "&:hover": {
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+               },
+            }),
+         }}
+      >
+         <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+            {item.icon}
+         </Box>
+
+         <Box component="span">{item.title} </Box>
+      </ListItemButton>
+   );
+}
+
 function Navigation() {
    return (
       <>
          <Stack>
-            <Box component={Link} to={"/form"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
-               Создать новость
-            </Box>
-
-            <Box component={Link} to={"/events"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
-               Мероприятия
-            </Box>
-
-            <Box component={Link} to={"/event-types"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
-               Типы мероприятий
-            </Box>
-
-            <Box component={Link} to={"/area"} sx={{ typography: "body1", textDecoration: "none", color: "inherit" }}>
-               Площадки
-            </Box>
+            {navConfig.map((item) => (
+               <NavItem item={item} />
+            ))}
          </Stack>
       </>
    );
